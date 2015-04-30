@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Glycomics Database</title>
+        <link rel='canvas_test' type='text/css' href='canvas_test.css'/>
+        <script type="text/javascript" src='canvas_listener.js'></script>
+    </head>
+    <body>
+    	<div class="pageHead">
+    		Molecule Creator
+    	</div>
+        <div class='sugar_buttons'>
+            
+        </div>
+        <canvas id="canvas" width="1000" height="500" style="border:1px solid black;">
+            This text is displayed because your browser does not support HTML5 Canvas.
+        </canvas>
+        <div>
+            <button id='Fucose' onclick=setName(this.id)>Fucose</button>
+            <button id='ManA' onclick=setName(this.id)>ManA</button>
+            <button id='NeuAc' onclick=setName(this.id)>NeuAc</button>
+            <button id='NeuGc' onclick=setName(this.id)>NeuGc</button>
+            <button id='KDN' onclick=setName(this.id)>KDN</button>
+            <button id='MannoseDi' onclick=setName(this.id)>MannoseDi</button>
+            <button id='MannoseCi' onclick=setName(this.id)>MannoseCi</button>
+            <button id='MannoseSq' onclick=setName(this.id)>MannoseSq</button>
+            <button id='GlucoseDi' onclick=setName(this.id)>GlucoseDi</button>
+            <button id='GlucoseCi' onclick=setName(this.id)>GlucoseCi</button>
+            <button id='GlucoseSq' onclick=setName(this.id)>GlucoseSq</button>
+            <button id='GalactoseDi' onclick=setName(this.id)>GalactoseDi</button>
+            <button id='GalactoseCi' onclick=setName(this.id)>GalactoseCi</button>
+            <button id='GalactoseSq' onclick=setName(this.id)>GalactoseSq</button>
+            <button id='GalA' onclick=setName(this.id)>GalA</button>
+            <button id='IdoA' onclick=setName(this.id)>IdoA</button>
+            <button id='GlcA' onclick=setName(this.id)>GlcA</button>
+            <button id='Xylose' onclick=setName(this.id)>Xylose</button>
+        </div>
+        <div>
+            <button id='undo' onclick=undo()>Undo</button>
+            <button id='clear' onclick=clearScreen()>Clear</button>
+        </div>
+        <script type='text/javascript' src='canvas_test.js'></script>
+    </body>
+</html>
