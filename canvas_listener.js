@@ -1,23 +1,26 @@
+// add the event listener to the document
 document.addEventListener("DOMContentLoaded", init, false);
-var px = [0];
-var py = [0];
+var px = [0]; // keep track of the x position of all sugars on the canvas
+var py = [0]; // keep track of the y position of all sugars on the canvas
 
-var r = 20;
-var clickedX = -1;
-var clickedY = -1;
-var hasSelected = false;
-// x = getObj();
-// var to = null;
-// var from = null;
+var r = 20; // radius of shaps
+var clickedX = -1; // tracks the x position of the last clicked shape on the canvas
+var clickedY = -1; // tracks the y position of hte last clicked shape on the canvas
 
+/*
+Initialize the event listener 
+*/
 function init() {
     var canvas = document.getElementById("canvas");
     canvas.addEventListener("mousedown", getPosition, false);
 }
 
+/*
+Gets the position of a click event on the canvas 
+*/
 function getPosition(event) {
-    var x = new Number();
-    var y = new Number();
+    var x = new Number(); // x position of click
+    var y = new Number(); // y position of click
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
 
@@ -32,69 +35,89 @@ function getPosition(event) {
               document.documentElement.scrollTop;
     }
 
-    x -= canvas.offsetLeft;
+    // adjust for location of the canvas on the page
+    x -= canvas.offsetLeft; 
     y -= canvas.offsetTop;
 
-    if (isLegal(x, y)) {
-        drawShape(getName(), x, y, r/2)
+    // decision process for click events
+    if (isLegal(x, y)) { // ensure space is not occupied
+        drawShape(getName(), x, y, r/2) 
+        // store x and y location of the sugar
         px.push(x);
         py.push(y);
-        //alert(molName());
-        // n = makeNode(getName())
-        // nodeList.add(n)
+        // add the sugar and action to the undo stack
         addSugar(getName(), x, y);
         addAction('sugar');
+
+        // reset the clicked location to unclicked
+        clickedY = -1;
+        clickedX = -1;
      }
-    else {
-        // find x and y coordinate [if (x>px[i]-r && x<px[i]+r && y<py[i]+r && y>py[i]-r)]
-        // determine the position of the node in the list given the coordinates
-        // if !from, set from = to the node
-        // else prompt bond type and set from = null
-        var coords = getNearest(x, y);
-        if (hasSelected) {
-            // ctx.beginPath();
-            // ctx.moveTo(clickedX, clickedY);
-            // ctx.lineTo(coords[0], coords[1]);
-            // ctx.lineWidth = 3;
-            // ctx.stroke();
-            // ctx.closePath();
-            drawBond(clickedX, clickedY, coords[0], coords[1]);
-            hasSelected = false;
-            addBond(clickedX, clickedY, coords[0], coords[1]);
-            addAction('bond');
+    else { // if the space is occupied, need to draw a bond
+        var coords = getNearest(x, y); // find the nearest sugar to the spot clicked
+
+        // if another sugar has already been clicked, a bond will be drawn from that sugar to this sugar
+        if (clickedX >= 0) {
+            drawBond(clickedX, clickedY, coords[0], coords[1]); // draws a bond between two sugars
+            addBond(clickedX, clickedY, coords[0], coords[1]); // adds the bond to a list of current bonds
+            addAction('bond'); // updates the last action to be the addition of a bond
+
+            // reset the clicked location to unclicked
             clickedY = -1;
             clickedX = -1;
         }
+        // if the is the first sugar clicked, its location will be stored incase another sugar is clicked
         else {
-            hasSelected = true;
             clickedX = coords[0];
             clickedY = coords[1];
         }
      }
 }
 
+/*
+Determines if a given location is already occupied
+
+Parameters
+    - x : The x coordinate of the most recent click
+    - y : The y coordinate of the most recent click
+*/
 function isLegal(x, y) {
     var valid = true;
     for (var i = 0; i < px.length; i++) {
+        // checks if x and y are both within the radius of another sugar
         if (x>px[i]-r && x<px[i]+r && y<py[i]+r && y>py[i]-r) {
             valid = false;
-            // alert("coordinate " + x + ", " + y + " is invalid, coordinate " + px[i] + " " + py[i] + " is too close \n"
-            //      + (px[i]+r)+" "+(px[i]-r)+"            "+(py[i]+r)+" "+(py[i]-r))
+            break;
         }
     }
     return valid;
 }
 
+/*
+Finds the nearest sugar to the given point
+
+Parameters:
+    - x : The x coordinate of the most recent click
+    - y : The y coordinate of the most recent click
+*/
 function getNearest(x, y) {
     for (var i = 0; i < px.length; i++) {
+        // checks if x and y are both within the radius of another sugar
         if ((x>px[i]-r && x<px[i]+r) && (y<py[i]+r && y>py[i]-r)) {
             return [px[i], py[i]];
         }
     }
 }
 
+function popXY() {
+    px.pop();
+    py.pop();
+}
 
-
+function clearXY() {
+    px = [];
+    py = [];
+}
 
 
 
